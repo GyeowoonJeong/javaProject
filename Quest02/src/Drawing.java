@@ -14,69 +14,11 @@ import java.util.ArrayList;
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
 
-
-class DrawHistory {
-	private Point p1, p2;
-	private String shape; 
-	private Color color;
-	private int stroke;
-	
-	public DrawHistory(Point p1, Point p2, String shape, Color color, int stroke) {
-		this.p1 = p1;
-		this.p2 = p2;
-		this.shape = shape;
-		this.color = color;
-		this.stroke = stroke;
-	}
-	
-	public void setP1(Point p1) {
-		this.p1 = p1;
-	}
-	
-	public void setP2(Point p2) {
-		this.p2 = p2;	
-	}
-	
-	public void setShape(String shape) {
-		this.shape = shape;
-	}
-	
-	public void setColor(Color color) {
-		this.color = color;
-	}
-	
-	public void setStroke(int stroke) {
-		this.stroke = stroke;
-	}
-	
-	public Point getP1() {
-		return this.p1;
-	}
-	
-	public Point getP2() {
-		return this.p2;
-	}
-	
-	public String getShape() {
-		return this.shape;
-	}
-	
-	public Color getColor() {
-		return this.color;
-	}
-	
-	public int getStroke() {
-		return this.stroke;
-	}
-}
-
 public class Drawing extends Canvas implements MouseMotionListener, MouseListener, ActionListener{
-	Point first, second;
-	String tool = "Pen";
-	Color c;
-	int stroke = 2;
-	JColorChooser colorChooser;
-	
+	protected Point first, second;
+	protected String tool = "Pen";
+	protected Color c;
+	protected int stroke = 2;
 	private ArrayList saver;
 	
 	Drawing() {
@@ -101,7 +43,6 @@ public class Drawing extends Canvas implements MouseMotionListener, MouseListene
 			tool = e.getActionCommand();
 		}
 		else if(cmd.equals("COLOR")) {
-			//colorChooser = new JColorChooser();
 			c = JColorChooser.showDialog(null, "ColorPicker", Color.BLACK);
 		}
 		else if(cmd.equals("UP"))
@@ -120,7 +61,7 @@ public class Drawing extends Canvas implements MouseMotionListener, MouseListene
 		super.paint(g);
 		
 		for(int i = 0; i < saver.size()-1; i++) {
-			DrawHistory drawhistory = (DrawHistory)saver.get(i); 
+			DrawnObject drawhistory = (DrawnObject)saver.get(i); 
 
 			if(drawhistory.getShape().equals("Pen")) {
 				g2.setStroke(new BasicStroke(drawhistory.getStroke()));
@@ -131,7 +72,7 @@ public class Drawing extends Canvas implements MouseMotionListener, MouseListene
 		}
 		
 		for(int i = 0; i < saver.size(); i++) {
-			DrawHistory drawhistory = (DrawHistory)saver.get(i);
+			DrawnObject drawhistory = (DrawnObject)saver.get(i);
 	
 			if(drawhistory.getShape().equals("Line")) {
 				g2.setStroke(new BasicStroke(drawhistory.getStroke()));
@@ -174,8 +115,8 @@ public class Drawing extends Canvas implements MouseMotionListener, MouseListene
 	public void mouseDragged(MouseEvent e) {
 		second = e.getPoint();
 		if(tool.equals("Pen")) {
-			DrawHistory dh = new DrawHistory(first, second, tool, c, stroke);
-			saver.add(dh);
+			DrawnObject dobj = new DrawnObject(first, second, tool, c, stroke);
+			saver.add(dobj);
 			first = second;
 		}
 		repaint();
@@ -190,8 +131,8 @@ public class Drawing extends Canvas implements MouseMotionListener, MouseListene
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		second = e.getPoint();
-		DrawHistory dh = new DrawHistory(first, second, tool, c, stroke);
-		saver.add(dh);
+		DrawnObject dobj = new DrawnObject(first, second, tool, c, stroke);
+		saver.add(dobj);
 		repaint();	
 	}
 
