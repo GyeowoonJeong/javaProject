@@ -19,6 +19,8 @@ public class Drawing extends Canvas implements MouseMotionListener, MouseListene
 	protected String tool = "Pen";
 	protected Color c;
 	protected int stroke = 2;
+	private int currentIdx;
+	private Color eraseC = Color.WHITE;
 	private ArrayList saver;
 	
 	Drawing() {
@@ -39,7 +41,7 @@ public class Drawing extends Canvas implements MouseMotionListener, MouseListene
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
-		if(cmd.equals("Pen") || cmd.equals("Line") || cmd.equals("Rectangle") || cmd.equals("Circle")) {
+		if(cmd.equals("Pen") || cmd.equals("Line") || cmd.equals("Rectangle") || cmd.equals("Circle") || cmd.equals("Eraser")) {
 			tool = e.getActionCommand();
 		}
 		else if(cmd.equals("COLOR")) {
@@ -54,27 +56,56 @@ public class Drawing extends Canvas implements MouseMotionListener, MouseListene
 			else 
 				JOptionPane.showMessageDialog(null, "최소굵기 입니다.");
 		}
+		
+		else if(cmd.equals("UNDO")) {
+			DrawnObject objects = (DrawnObject)saver.get(currentIdx);
+			if(objects.getShape().equals("Pen")) {
+				for(int i = currentIdx; !objects.getShape().equals("Pen"); i--) {
+					currentIdx--;
+				}
+			}
+			else
+				currentIdx--;
+		}
 	}
 	
 	public void paint(Graphics g) {
+		currentIdx = saver.size() - 1;
 		Graphics2D g2 = (Graphics2D) g;
 		super.paint(g);
-		
-		for(int i = 0; i < saver.size()-1; i++) {
+		/*
+		for(int i = 0; i < currentIdx; i++) {
 			DrawnObject drawhistory = (DrawnObject)saver.get(i); 
-
+			
 			if(drawhistory.getShape().equals("Pen")) {
 				g2.setStroke(new BasicStroke(drawhistory.getStroke()));
 				g.setColor(drawhistory.getColor());
-				g.drawLine(drawhistory.getP1().x, drawhistory.getP1().y, drawhistory.getP2().x, drawhistory.getP2().y);
-				
+				g.drawLine(drawhistory.getP1().x, drawhistory.getP1().y, drawhistory.getP2().x, drawhistory.getP2().y);	
 			}
-		}
+			
+			else if(drawhistory.getShape().equals("Eraser")) {
+				g2.setStroke(new BasicStroke(drawhistory.getStroke()));
+				g.setColor(drawhistory.getColor());
+				g.drawLine(drawhistory.getP1().x, drawhistory.getP1().y, drawhistory.getP2().x, drawhistory.getP2().y);	
+			}
+		}*/
 		
-		for(int i = 0; i < saver.size(); i++) {
+		for(int i = 0; i < currentIdx + 1; i++) {
 			DrawnObject drawhistory = (DrawnObject)saver.get(i);
-	
-			if(drawhistory.getShape().equals("Line")) {
+			
+			if(drawhistory.getShape().equals("Pen")) {
+				g2.setStroke(new BasicStroke(drawhistory.getStroke()));
+				g.setColor(drawhistory.getColor());
+				g.drawLine(drawhistory.getP1().x, drawhistory.getP1().y, drawhistory.getP2().x, drawhistory.getP2().y);	
+			}
+			
+			else if(drawhistory.getShape().equals("Eraser")) {
+				g2.setStroke(new BasicStroke(drawhistory.getStroke()));
+				g.setColor(drawhistory.getColor());
+				g.drawLine(drawhistory.getP1().x, drawhistory.getP1().y, drawhistory.getP2().x, drawhistory.getP2().y);	
+			}
+			
+			else if(drawhistory.getShape().equals("Line")) {
 				g2.setStroke(new BasicStroke(drawhistory.getStroke()));
 				g.setColor(drawhistory.getColor());
 				g.drawLine(drawhistory.getP1().x, drawhistory.getP1().y, drawhistory.getP2().x, drawhistory.getP2().y);
@@ -82,25 +113,35 @@ public class Drawing extends Canvas implements MouseMotionListener, MouseListene
 			else if(drawhistory.getShape().equals("Rectangle")) {
 				g2.setStroke(new BasicStroke(drawhistory.getStroke()));
 				g.setColor(drawhistory.getColor());
-				g.drawRect(drawhistory.getP1().x, drawhistory.getP1().y, drawhistory.getP2().x - drawhistory.getP1().x, drawhistory.getP2().y - drawhistory.getP1().y);
+				g.drawRect(drawhistory.getP1().x, drawhistory.getP1().y, Math.abs(drawhistory.getP2().x - drawhistory.getP1().x), Math.abs(drawhistory.getP2().y - drawhistory.getP1().y));
 			}
 			else if(drawhistory.getShape().equals("Circle")) {
 				g2.setStroke(new BasicStroke(drawhistory.getStroke()));
 				g.setColor(drawhistory.getColor());
-				g.drawOval(drawhistory.getP1().x, drawhistory.getP1().y, drawhistory.getP2().x - drawhistory.getP1().x, drawhistory.getP2().y - drawhistory.getP1().y);
+				g.drawOval(drawhistory.getP1().x, drawhistory.getP1().y, Math.abs(drawhistory.getP2().x - drawhistory.getP1().x), Math.abs(drawhistory.getP2().y - drawhistory.getP1().y));
 			}
 			
 		}
 		
-		g.setColor(c);
 		g2.setStroke(new BasicStroke(stroke));
 		if((first != null) && (second != null)) {
-			if(tool.equals("Pen") || tool.equals("Line"))
+			if(tool.equals("Pen") || tool.equals("Line")) {
+				g.setColor(c);
 				g.drawLine(first.x, first.y, second.x, second.y);
-			else if(tool.equals("Rectangle"))
+			}
+			else if(tool.equals("Eraser")) {
+				g.setColor(eraseC);
+				g.drawLine(first.x, first.y, second.x, second.y);
+			}
+			else if(tool.equals("Rectangle")) {
+				g.setColor(c);
 				g.drawRect(first.x, first.y, second.x - first.x, second.y - first.y);
-			else if(tool.equals("Circle"))
+				
+			}
+			else if(tool.equals("Circle")) {
+				g.setColor(c);
 				g.drawOval(first.x, first.y, second.x - first.x, second.y - first.y);
+			}
 		}
 	
 
@@ -110,12 +151,16 @@ public class Drawing extends Canvas implements MouseMotionListener, MouseListene
 		   paint(g);
 	}
 	
-	
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		second = e.getPoint();
 		if(tool.equals("Pen")) {
 			DrawnObject dobj = new DrawnObject(first, second, tool, c, stroke);
+			saver.add(dobj);
+			first = second;
+		}
+		if(tool.equals("Eraser")) {
+			DrawnObject dobj = new DrawnObject(first, second, tool, eraseC, stroke);
 			saver.add(dobj);
 			first = second;
 		}
@@ -131,8 +176,14 @@ public class Drawing extends Canvas implements MouseMotionListener, MouseListene
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		second = e.getPoint();
-		DrawnObject dobj = new DrawnObject(first, second, tool, c, stroke);
-		saver.add(dobj);
+		if(tool.equals("Eraser")) {
+			DrawnObject dobj = new DrawnObject(first, second, tool, eraseC, stroke);
+			saver.add(dobj);
+		}
+		else {
+			DrawnObject dobj = new DrawnObject(first, second, tool, c, stroke);
+			saver.add(dobj);
+		}
 		repaint();	
 	}
 
