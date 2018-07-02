@@ -19,7 +19,6 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	boolean turn = true;
 	int setCount1 = 0;
 	int setCount2 = 0;
-	int count = 0;
 	Color color = Color.WHITE;
 	Color[][] setted;
 	ArrayList<SetStone> stones;
@@ -60,13 +59,14 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 		}
 		
 		if(checkBound()) {
-			centerX = setX + (40 * (setX / 40) - (setX - 15));
-			centerY = setY + (40 * (setY / 40) - (setY - 15));
 			if(checkSetted()) {
+				centerX = setX + (40 * (setX / 40) - (setX - 15));
+				centerY = setY + (40 * (setY / 40) - (setY - 15));
 				g.setColor(color);
 				g.fillOval(centerX - currentCursor/2, centerY - currentCursor/2, currentCursor, currentCursor);
 				stones.add(new SetStone(centerX, centerY, color));
 				setted[(centerX - 15) / 40][(centerY - 15) / 40] = color;
+				checkMatch((centerX - 15) / 40, (centerY - 15) / 40, color);
 			}
 		}
 	}
@@ -82,26 +82,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	public boolean checkHorizontal(int x, int y, Color color) {
 		int cx;
 		int cy = y;
-		/*
-		for(int i = 0; i < stones.size(); i++) {
-			for(int j = centerX; j >= 15; j -= 40) {
-				if(j == stones.get(i).x && centerY == stones.get(i).y && color == stones.get(i).color) 
-					count++;
-				else
-					break;
-			}
-			for (int k = centerX; k <= 735; k++) {
-				if(k == stones.get(i).x && centerY == stones.get(i).y && color == stones.get(i).color)
-					count++;
-				else
-					break;
-			}
-		}
-		if((count - 1) == 8)
-			return true;
-		
-		return false;
-		*/
+		int count = 0;
 		for(cx = x; cx >= 0; cx--) {
 			if(setted[cx][cy] != null && setted[cx][cy] == color)
 				count++;
@@ -123,26 +104,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	public boolean checkVertical(int x, int y, Color color) {
 		int cx = x;
 		int cy;
-		/*
-		for(int i = 0; i < stones.size(); i++) {
-			for(int j = centerY; j >= 15; j -= 40) {
-				if(centerX == stones.get(i).x && j == stones.get(i).y && color == stones.get(i).color) 
-					count++;
-				else
-					break;
-			}
-			for (int k = centerY; k <= 735; k++) {
-				if(centerX == stones.get(i).x && k == stones.get(i).y && color == stones.get(i).color)
-					count++;
-				else
-					break;
-			}
-		}
-		if((count - 1) == 8)
-			return true;
-		
-		return false;
-		*/
+		int count = 0;
 		for(cy = y; cy >= 0; cy--) {
 			if(setted[cx][cy] != null && setted[cx][cy] == color)
 				count++;
@@ -163,6 +125,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	
 	public boolean checkSlash(int x, int y, Color color) {
 		int cx, cy;
+		int count = 0;
 		for(cx = x, cy = y; cx >= 0 && cy >= 0; cx-- , cy--) {
 			if(setted[cx][cy] != null && setted[cx][cy] == color)
 				count++;
@@ -183,6 +146,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	
 	public boolean checkBackSlash(int x, int y, Color color) {
 		int cx, cy;
+		int count = 0;
 		for(cx = x, cy = y; cx <= 19 && cy >= 0; cx++ , cy--) {
 			if(setted[cx][cy] != null && setted[cx][cy] == color)
 				count++;
@@ -223,13 +187,26 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	
 	public void checkMatch(int x, int y, Color color) {
 		if(checkHorizontal(x, y, color) || checkVertical(x, y, color) || checkSlash(x, y, color) || checkBackSlash(x, y, color)) {
-			if(color == Color.WHITE)
+			if(color == Color.WHITE) {
 				JOptionPane.showMessageDialog(null, "흰 돌이 이겼습니다.", "게임종료 ", JOptionPane.PLAIN_MESSAGE);
-			else
+				removeArray();
+				stones.removeAll(stones);
+			}
+			else {
 				JOptionPane.showMessageDialog(null, "검은 돌이 이겼습니다.", "게임종료 ", JOptionPane.PLAIN_MESSAGE);
+				removeArray();
+				stones.removeAll(stones);
+			}
 		}
 	}
 	
+	public void removeArray() {
+		for(int i = 0; i < 19; i++) {
+			for(int j = 0; j < 19; j++) {
+				setted[i][j] = null;
+			}
+		}
+	}
 	public boolean checkBound() {
 		if(setX % 40 > 5 && setX % 40 < 25 && setY % 40 > 5 && setY % 40 < 25)
 			return true;
@@ -248,14 +225,16 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	public void mouseReleased(MouseEvent e) {
 			setX = e.getX();
 			setY = e.getY();
-			tempX = setX + (40 * (setX / 40) - (setX - 15));
-			tempY = setY + (40 * (setY / 40) - (setY - 15));
+			centerX = setX + (40 * (setX / 40) - (setX - 15));
+			centerY = setY + (40 * (setY / 40) - (setY - 15));
 		if(checkSetted() && checkBound()) {
-			checkMatch((tempX - 15) / 40, (tempY - 15) / 40, color);
+			stones.add(new SetStone(centerX, centerY, color));
+			setted[(centerX - 15) / 40][(centerY - 15) / 40] = color;
+			checkMatch((centerX - 15) / 40, (centerY - 15) / 40, color);
 			setTurn();
 		}
 		else {
-			JOptionPane.showMessageDialog(null, "이미 돌이 놓여 있습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "이 곳에 돌을 놓을 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 	

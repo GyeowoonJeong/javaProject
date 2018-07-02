@@ -30,14 +30,14 @@ public class StartPanel extends JPanel{
 		start.setBorderPainted(false);
 		howtoplay.setBorderPainted(false);
 		
-		title.setBounds(200, 100, 600, 150);
-		start.setBounds(200, 500, 300, 100);
-		howtoplay.setBounds(700, 500, 300, 100);
+		title.setBounds(200, 200, 600, 150);
+		start.setBounds(200, 550, 300, 100);
+		howtoplay.setBounds(700, 550, 300, 100);
 		
 		this.add(title);
 		this.add(start);
 		this.add(howtoplay);
-		this.setVisible(true);
+		//this.setVisible(true);
 	}
 
 }
