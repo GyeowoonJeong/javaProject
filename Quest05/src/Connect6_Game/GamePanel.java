@@ -316,6 +316,44 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 		
 	}
 	
+	public void removeStone() {
+		setted[(stones.get(stones.size()-1).x - 15) / 40][(stones.get(stones.size()-1).y - 15) / 40] = null;
+		stones.remove(stones.size() - 1);
+		repaint();	
+		if(setCount1 == 0 && turn) {
+			setCount2 = 1;
+			turn = false;
+			MainFrame.gsp.turn = false;
+			MainFrame.gsp.repaint();
+		}
+		
+		else if(setCount2 == 0 && !turn) {
+			setCount1 = 1;
+			turn = true;
+			MainFrame.gsp.turn = true;
+			MainFrame.gsp.repaint();
+		}
+		else if(setCount1 == 1) {
+			setCount1--;
+		}
+		else if(setCount2 == 1) {
+			setCount2--;
+		}
+	}
+	
+	public void getUndoMessage() {
+		int result = JOptionPane.showConfirmDialog(null, "상대방이 무르기를 요청했습니다. 받아들이시겠습니까? ", 
+				"Undo set stone", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+		if(result == 0) {
+			Main.frame.client.sender.sendFunct("[UNDO_ANS]," + Main.frame.client.receiver.threadNum + "," + result);
+			removeStone();
+		}
+		else if(result == 1) {
+			Main.frame.client.sender.sendFunct("[UNDO_ANS]," + Main.frame.client.receiver.threadNum + "," + result);
+		}
+			
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {}
 	@Override
@@ -336,28 +374,6 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 			}
 			else {
 				Main.frame.client.sender.sendFunct("[UNDO]," + Main.frame.client.receiver.threadNum);
-				setted[(stones.get(stones.size()-1).x - 15) / 40][(stones.get(stones.size()-1).y - 15) / 40] = null;
-				stones.remove(stones.size() - 1);
-				repaint();	
-				if(setCount1 == 0 && turn) {
-					setCount2 = 1;
-					turn = false;
-					MainFrame.gsp.turn = false;
-					MainFrame.gsp.repaint();
-				}
-				
-				else if(setCount2 == 0 && !turn) {
-					setCount1 = 1;
-					turn = true;
-					MainFrame.gsp.turn = true;
-					MainFrame.gsp.repaint();
-				}
-				else if(setCount1 == 1) {
-					setCount1--;
-				}
-				else if(setCount2 == 1) {
-					setCount2--;
-				}
 			}
 		}
 		

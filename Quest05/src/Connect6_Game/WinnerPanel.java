@@ -17,7 +17,7 @@ public class WinnerPanel extends JPanel{
 	JLabel title, winner;
 	JPanel titlePanel, winnerName;
 	WinnerPanel() {
-		setSize(1200, 850);
+		setSize(1300, 850);
 		setBackground(new Color(51, 51, 58));
 		setLayout(null);
 		if(MainFrame.gp.stones.get(MainFrame.gp.stones.size() - 1).color == Color.WHITE) {
@@ -30,10 +30,10 @@ public class WinnerPanel extends JPanel{
 		}
 		
 		titlePanel = new JPanel();
-		titlePanel.setBounds(150, 100, 900, 150);
+		titlePanel.setBounds(200, 100, 900, 150);
 		titlePanel.setBackground(new Color(51, 51, 58));
 		winnerName = new JPanel();
-		winnerName.setBounds(550, 400, 300, 200);
+		winnerName.setBounds(600, 400, 300, 200);
 		winnerName.setBackground(new Color(51, 51, 58));
 		
 		title = new JLabel("The Winner Is");
@@ -47,9 +47,16 @@ public class WinnerPanel extends JPanel{
 		
 		title.setForeground(Color.WHITE);
 		winner.setForeground(Color.WHITE);
-
-		replay.setBounds(300, 720, 200, 70);
-		exit.setBounds(700, 720, 200, 70);
+		
+		replay.setBackground(new Color(247, 234, 255));
+		exit.setBackground(new Color(247, 234, 255));
+		replay.setOpaque(true);
+		replay.setBorderPainted(false);
+		exit.setOpaque(true);
+		exit.setBorderPainted(false);
+		
+		replay.setBounds(250, 720, 200, 70);
+		exit.setBounds(850, 720, 200, 70);
 		
 		titlePanel.add(title);
 		winnerName.add(winner);

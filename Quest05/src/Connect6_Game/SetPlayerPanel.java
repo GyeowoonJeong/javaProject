@@ -12,7 +12,7 @@ public class SetPlayerPanel extends JPanel{
 	JButton start, cancel;
 	
 	public SetPlayerPanel() {
-		setSize(1200, 850);
+		setSize(1300, 850);
 		setBackground(new Color(51, 51, 58));
 		setLayout(null);
 		player1 = new Player("/Users/jeong-gyeoun/Downloads/boy.png");
@@ -20,25 +20,25 @@ public class SetPlayerPanel extends JPanel{
 		start = new JButton("Let's Play");
 		cancel = new JButton("Go Back");
 		
-		player1.setLocation(100, 30);
-		player2.setLocation(100, 375);
-		start.setBounds(300, 720, 200, 70);
-		cancel.setBounds(700, 720, 200, 70);
+		player1.setLocation(150, 30);
+		player2.setLocation(150, 375);
+		start.setBounds(550, 720, 200, 70);
+		cancel.setBounds(750, 720, 200, 70);
 		
 		start.setBackground(new Color(247, 234, 255));
 		start.setOpaque(true);
 		start.setBorderPainted(false);
 		start.setFont(new Font("I AM A PLAYER", Font.BOLD, 20));
-		
+		/*
 		cancel.setBackground(new Color(247, 234, 255));
 		cancel.setOpaque(true);
 		cancel.setBorderPainted(false);
 		cancel.setFont(new Font("I AM A PLAYER", Font.BOLD, 20));
-		
+		*/
 		this.add(player1);
 		this.add(player2);
 		this.add(start);
-		this.add(cancel);
+		//this.add(cancel);
 	}
 
 }

@@ -83,6 +83,8 @@ public class GameServer {
 		Socket socket;
 		DataInputStream in;
 		DataOutputStream out;
+		int threadNum;
+		String msg;
 		
 		ServerReceiver(Socket socket) {
 			this.socket = socket;

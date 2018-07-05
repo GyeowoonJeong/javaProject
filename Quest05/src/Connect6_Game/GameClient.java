@@ -98,6 +98,14 @@ public class GameClient {
 							Main.frame.spp.player2.namespace.setText(arr[2]);
 					}
 					
+					else if(cmd.startsWith("[START]")) {
+						Main.frame.spp.start.setEnabled(true);
+					}
+					else if(cmd.startsWith("[REQUEST]")) {
+						Main.frame.client.sender.sendFunct("[NAME]," + Main.frame.client.receiver.threadNum + "," + 
+								Main.frame.spp.player1.namespace.getText());
+					}
+					
 					else if(cmd.startsWith("[WARNING]")) {
 						arr = cmd.split(",");
 						JOptionPane.showMessageDialog(null, arr[1], "경고", JOptionPane.WARNING_MESSAGE);
@@ -124,7 +132,36 @@ public class GameClient {
 					
 					else if(cmd.startsWith("[UNDO]")) {
 						arr = cmd.split(",");
-						JOptionPane.showConfirmDialog(null, "더 이상 닉네임을 변경할 수 없습니다. 이대로 하시겠습니까?", "경고", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+						Main.frame.gp.getUndoMessage();
+					}
+					
+					else if(cmd.startsWith("[REPLAY]")) {
+						Main.frame.getReplayMessage();
+					}
+					
+					else if(cmd.startsWith("[UNDO_ANS]")) {
+						arr = cmd.split(",");
+						if(arr[2].equals("0")) {
+							Main.frame.gp.removeStone();
+						}
+						else if(arr[2].equals("1")) {
+							JOptionPane.showMessageDialog(null, "상대방이 요청을 거절했습니다.", "Undo", JOptionPane.PLAIN_MESSAGE);
+						}
+					}
+					
+					else if(cmd.startsWith("[REPLAY_ANS]")) {
+						arr = cmd.split(",");
+						if(arr[2].equals("0")) {
+							Main.frame.replay();
+						}
+						else if(arr[2].equals("1")) {
+							JOptionPane.showMessageDialog(null, "상대방이 요청을 거절했습니다.", "Replay", JOptionPane.PLAIN_MESSAGE);
+						}
+					}
+					
+					else if(cmd.startsWith("[MESSAGE]")) {
+						arr = cmd.split(",");
+						Main.frame.cp.msgBox.append("[" + arr[2] + "] : " + arr[3] + "\n");
 					}
 				} catch(IOException e) {}
 			}
@@ -146,8 +183,6 @@ public class GameClient {
 				c = Color.BLACK;
 			else if (color.equals("java.awt.Color[r=255"))
 				c = Color.WHITE;
-			else
-				System.out.println("NO");
 			return c;
 		}
 		

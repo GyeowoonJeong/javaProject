@@ -16,7 +16,7 @@ public class StartPanel extends JPanel{
 		title = new JLabel("Connect6");
 		title.setFont(new Font("60sSTRIPE", Font.BOLD, 150));
 		title.setForeground(Color.WHITE);
-		this.setSize(1200, 850);
+		this.setSize(1300, 850);
 		this.setLayout(null);
 		start = new JButton("Start");
 		howtoplay = new JButton("How To Play");
@@ -30,9 +30,9 @@ public class StartPanel extends JPanel{
 		start.setBorderPainted(false);
 		howtoplay.setBorderPainted(false);
 		
-		title.setBounds(200, 200, 600, 150);
-		start.setBounds(200, 550, 300, 100);
-		howtoplay.setBounds(700, 550, 300, 100);
+		title.setBounds(250, 200, 600, 150);
+		start.setBounds(260, 550, 300, 100);
+		howtoplay.setBounds(750, 550, 300, 100);
 		
 		this.add(title);
 		this.add(start);

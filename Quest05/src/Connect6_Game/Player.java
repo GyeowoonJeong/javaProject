@@ -20,7 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
-public class Player extends JPanel implements ActionListener{
+public class Player extends JPanel{
 	private BufferedImage image1;
 	String name, path;
 	Shape circle;
@@ -46,16 +46,16 @@ public class Player extends JPanel implements ActionListener{
 		namespace.setHorizontalAlignment(SwingConstants.CENTER);
 		namespace.setEditable(false);
 		
+		/*
 		ok = new JButton("OK");
 		ok.setBackground(new Color(247, 234, 255));
 		ok.setOpaque(true);
 		ok.setBorderPainted(false);
 		ok.setFont(new Font("I AM A PLAYER", Font.BOLD, 20));
-	
-		namespace.setBounds(400, 120, 350, 70);
-		ok.setBounds(830, 120, 100, 70);
-		
-		ok.addActionListener(this);
+	*/
+		namespace.setBounds(500, 120, 350, 70);
+		//ok.setBounds(830, 120, 100, 70);
+
 		this.add(namespace);
 		//this.add(ok);
 		try {	
@@ -69,24 +69,8 @@ public class Player extends JPanel implements ActionListener{
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D)g;
 		super.paint(g);
-		g2.drawImage(image1, 50, 43, 250, 250, null);
+		g2.drawImage(image1, 100, 43, 250, 250, null);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		/*if(e.getActionCommand().equals("OK")) {
-			if(namespace.getText().equals("")) {
-				JOptionPane.showMessageDialog(null, "플레이어 이름이 설정되지 않았습니다.", "경고", JOptionPane.WARNING_MESSAGE);
-				return;
-			}
-			
-			result = JOptionPane.showConfirmDialog(null, "더 이상 닉네임을 변경할 수 없습니다. 이대로 하시겠습니까?", "경고", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-			if(result == 0) {
-				namespace.setText(namespace.getText());
-				namespace.setEditable(false);
-			}
-		}*/
-		
-	}
 	
 }

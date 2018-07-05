@@ -16,10 +16,11 @@ public class MainFrame extends JFrame implements ActionListener{
 	public static WinnerPanel wp;
 	public static HowToPlay htp;
 	public static GameLogin gl;
+	public static ChattingPanel cp;
 	GameClient client;
 	
 	MainFrame() {
-		this.setSize(1200, 850);
+		this.setSize(1300, 850);
 		getContentPane().setBackground(new Color(51, 51, 58));
 		this.setLayout(null);
 		this.setResizable(false);
@@ -47,10 +48,14 @@ public class MainFrame extends JFrame implements ActionListener{
 		getContentPane().removeAll();
 		gp = new GamePanel();
 		gsp = new GameSubPanel();
+		cp = new ChattingPanel();
 		gp.setLocation(30, 30);
-		gsp.setLocation(810, 30);
+		gsp.setLocation(890, 30);
+		cp.setLocation(890, 340);
+		
 		this.add(gp);
 		this.add(gsp);
+		this.add(cp);
 		revalidate();
 		repaint();
 	}
@@ -84,29 +89,35 @@ public class MainFrame extends JFrame implements ActionListener{
 		repaint();
 	}
 	
-	public void showHowToPlay() {
-		htp = new HowToPlay();
-		htp.understand.addActionListener(this);
-		htp.setLocation(350, 225);
-		this.add(htp);
-		this.htp.setVisible(true);
-	}
-	
 	public void replay() {
 		getContentPane().removeAll();
 		gp.setLocation(30, 30);
-		gsp.setLocation(810, 30);
+		gsp.setLocation(890, 30);
+		cp.setLocation(890, 340);
 		this.add(gp);
 		this.add(gsp);
+		this.add(cp);
 		revalidate();
 		repaint();
+	}
+	
+	public void getReplayMessage() {
+		int result = JOptionPane.showConfirmDialog(null, "상대방이 다시 게임하기를 요청했습니다. 받아들이시겠습니까? ", 
+				"Replay", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+		if(result == 0) {
+			client.sender.sendFunct("[REPLAY_ANS]," + client.receiver.threadNum + "," + result);
+			replay();
+		}
+		else if(result == 1) {
+			client.sender.sendFunct("[REPLAY_ANS]," + client.receiver.threadNum + "," + result);
+		}
+			
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("Start")) {
 			goToLogin();
-			client = new GameClient();
 		}
 	
 		else if(e.getActionCommand().equals("How To Play")) {
@@ -119,16 +130,19 @@ public class MainFrame extends JFrame implements ActionListener{
 				JOptionPane.showMessageDialog(null, "플레이어 이름이 설정되지 않았습니다.", "경고", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
+			client = new GameClient();
 			setPlayer();
-
 			if(client.receiver.threadNum % 2 == 1) {
 				spp.player1.namespace.setText(gl.id.getText());
 				//client.sender.cmd = "[NAME]," + client.receiver.threadNum + "," + spp.player1.namespace.getText();
 				client.sender.sendFunct("[NAME]," + client.receiver.threadNum + "," + spp.player1.namespace.getText());
+				spp.start.setEnabled(false);
 			}
 			else if(client.receiver.threadNum % 2 == 0) {
 				spp.player2.namespace.setText(gl.id.getText());
 				client.sender.sendFunct("[NAME]," + client.receiver.threadNum + "," + spp.player2.namespace.getText());
+				client.sender.sendFunct("[REQUEST]," + client.receiver.threadNum);
+				client.sender.sendFunct("[START]," + client.receiver.threadNum);
 			}
 		}
 		
@@ -145,7 +159,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		}
 		
 		else if(e.getActionCommand().equals("REPLAY")) {
-			replay();
+			client.sender.sendFunct("[REPLAY]," + client.receiver.threadNum);
 		}
 		
 	}

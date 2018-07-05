@@ -25,7 +25,7 @@ public class GameSubPanel extends JPanel{
 	
 	
 	GameSubPanel() {
-		this.setSize(360, 325);
+		this.setSize(360, 300);
 		this.setLayout(null);
 		this.setBackground(new Color(51, 51, 58));
 		border = new LineBorder(new Color(247, 234, 255), 4, true);
