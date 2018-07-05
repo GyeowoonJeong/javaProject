@@ -28,12 +28,12 @@ public class SetPlayerPanel extends JPanel{
 		start.setBackground(new Color(247, 234, 255));
 		start.setOpaque(true);
 		start.setBorderPainted(false);
-		start.setFont(new Font("60sSTRIPE", Font.BOLD, 20));
+		start.setFont(new Font("I AM A PLAYER", Font.BOLD, 20));
 		
 		cancel.setBackground(new Color(247, 234, 255));
 		cancel.setOpaque(true);
 		cancel.setBorderPainted(false);
-		cancel.setFont(new Font("60sSTRIPE", Font.BOLD, 20));
+		cancel.setFont(new Font("I AM A PLAYER", Font.BOLD, 20));
 		
 		this.add(player1);
 		this.add(player2);

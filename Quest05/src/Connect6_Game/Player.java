@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 public class Player extends JPanel implements ActionListener{
@@ -41,20 +42,22 @@ public class Player extends JPanel implements ActionListener{
 		namespace.setBorder(border);
 		namespace.setBackground(new Color(51, 51, 58));
 		namespace.setForeground(Color.WHITE);
-		namespace.setFont(new Font("DX하얀토끼 Std", Font.BOLD, 20));
+		namespace.setFont(new Font("I AM A PLAYER", Font.BOLD, 30));
+		namespace.setHorizontalAlignment(SwingConstants.CENTER);
+		namespace.setEditable(false);
 		
 		ok = new JButton("OK");
 		ok.setBackground(new Color(247, 234, 255));
 		ok.setOpaque(true);
 		ok.setBorderPainted(false);
-		ok.setFont(new Font("60sSTRIPE", Font.BOLD, 30));
+		ok.setFont(new Font("I AM A PLAYER", Font.BOLD, 20));
 	
 		namespace.setBounds(400, 120, 350, 70);
 		ok.setBounds(830, 120, 100, 70);
 		
 		ok.addActionListener(this);
 		this.add(namespace);
-		this.add(ok);
+		//this.add(ok);
 		try {	
 			image1 = ImageIO.read(new File(path));	
 		} catch (IOException e1) {
@@ -71,7 +74,7 @@ public class Player extends JPanel implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equals("OK")) {
+		/*if(e.getActionCommand().equals("OK")) {
 			if(namespace.getText().equals("")) {
 				JOptionPane.showMessageDialog(null, "플레이어 이름이 설정되지 않았습니다.", "경고", JOptionPane.WARNING_MESSAGE);
 				return;
@@ -82,7 +85,7 @@ public class Player extends JPanel implements ActionListener{
 				namespace.setText(namespace.getText());
 				namespace.setEditable(false);
 			}
-		}
+		}*/
 		
 	}
 	
