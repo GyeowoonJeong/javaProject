@@ -54,8 +54,8 @@ public class GameSubPanel extends JPanel{
 		this.add(label2);
 		this.add(undo);
 		try {	
-			p1 = ImageIO.read(new File("/Users/jeong-gyeoun/Downloads/boy (2).png"));	
-			p2 = ImageIO.read(new File("/Users/jeong-gyeoun/Downloads/girl (2).png"));	
+			p1 = ImageIO.read(new File("img/boy (2).png"));	
+			p2 = ImageIO.read(new File("img/girl (2).png"));	
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

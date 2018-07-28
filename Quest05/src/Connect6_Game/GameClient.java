@@ -125,11 +125,18 @@ public class GameClient {
 					
 					else if(cmd.startsWith("[TURN]")) {
 						arr = cmd.split(",");
-						Main.frame.gp.turn = stob(arr[2]);
-						Main.frame.gsp.turn = stob(arr[2]);
+						boolean turn = stob(arr[2]);
+						Main.frame.gp.turn = turn;
+						Main.frame.gsp.turn = turn;
+						Main.frame.gsp.undo.setEnabled(true);
 						Main.frame.gsp.repaint();
 					}
 					
+					else if(cmd.startsWith("[ENABLE]")) {
+						arr = cmd.split(",");
+						boolean turn = stob(arr[2]);
+						Main.frame.gsp.undo.setEnabled(false);
+					}
 					else if(cmd.startsWith("[UNDO]")) {
 						arr = cmd.split(",");
 						Main.frame.gp.getUndoMessage();
@@ -162,6 +169,21 @@ public class GameClient {
 					else if(cmd.startsWith("[MESSAGE]")) {
 						arr = cmd.split(",");
 						Main.frame.cp.msgBox.append("[" + arr[2] + "] : " + arr[3] + "\n");
+					}
+					
+					else if(cmd.startsWith("[WAIT]")) {
+						arr = cmd.split(",");
+						if(arr[2].equals("ready"))
+							Main.frame.start++;
+						else if(arr[2].equals("start")) {
+							Main.frame.gp.msgCount++;
+							Main.frame.gp.repaint();
+						}
+						
+					}
+					
+					else if(cmd.startsWith("[MOUSEMOVE]")) {
+						Main.frame.gp.repaint();
 					}
 				} catch(IOException e) {}
 			}

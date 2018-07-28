@@ -26,6 +26,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	boolean reset = false;
 	int setCount1 = 0;
 	int setCount2 = 0;
+	int msgCount = 0;
 	Color color = Color.WHITE;
 	Color[][] setted;
 	ArrayList<SetStone> stones;
@@ -164,6 +165,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	}
 	
 	public void setTurn() {
+		Main.frame.client.sender.sendFunct("[ENABLE]," + Main.frame.client.receiver.threadNum + "," + turn);
 		if(turn) {
 			setCount1++;
 			color = Color.WHITE;
@@ -228,7 +230,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	
 	public void addSound() {
 		try {
-		  AudioInputStream ais = AudioSystem.getAudioInputStream(new File("/Users/jeong-gyeoun/Downloads/step-sound9.wav"));
+		  AudioInputStream ais = AudioSystem.getAudioInputStream(new File("sound/step-sound9.wav"));
 		  Clip clip = AudioSystem.getClip();
 		  clip.stop();
 		  clip.open(ais);
@@ -239,78 +241,103 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if(Main.frame.client.receiver.threadNum % 2 == 0) {
-			if(!turn)
-				this.setEnabled(false);
-			else {
-				this.setEnabled(true);
-				currentX = e.getX();
-				currentY = e.getY();
-				repaint();
-			}
+		if(Main.frame.start < 2) {
+			this.setEnabled(false);
+			Main.frame.grp.setEnabled(false);
 		}
 		
-		else if(Main.frame.client.receiver.threadNum % 2 == 1) {
-			if(turn)
-				this.setEnabled(false);
-			else {
-				this.setEnabled(true);
-				currentX = e.getX();
-				currentY = e.getY();
-				repaint();
+		else {
+			if(msgCount == 0) {
+				Main.frame.client.sender.sendFunct("[MESSAGE],"+ Main.frame.client.receiver.threadNum + "," + 
+				        Main.frame.client.sender.name + "," + "모두 입장했습니다. 게임을 시작하세요.");
+				Main.frame.cp.msgBox.append("[" + Main.frame.gl.id.getText() + "] : " + "모두 입장했습니다. 게임을 시작하세요.\n");
+				Main.frame.client.sender.sendFunct("[WAIT]," + Main.frame.client.receiver.threadNum +",start");
+				msgCount++;
+			}
+			
+			if(Main.frame.client.receiver.threadNum % 2 == 0) {
+				if(!turn)
+					this.setEnabled(false);
+				else {
+					this.setEnabled(true);
+					currentX = e.getX();
+					currentY = e.getY();
+					repaint();
+				}
+			}
+			
+			else if(Main.frame.client.receiver.threadNum % 2 == 1) {
+				if(turn) {
+					this.setEnabled(false);
+				}
+				else {
+					this.setEnabled(true);
+					currentX = e.getX();
+					currentY = e.getY();
+					repaint();
+				}
+				
 			}
 		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if(Main.frame.client.receiver.threadNum % 2 == 0) {
-			if(!turn)
-				this.setEnabled(false);
-			else {
-				this.setEnabled(true);
-				setX = e.getX();
-				setY = e.getY();
-				centerX = setX + (40 * (setX / 40) - (setX - 15));
-				centerY = setY + (40 * (setY / 40) - (setY - 15));
-				if(checkSetted() && checkBound()) {
-					setTurn();
-					MainFrame.gsp.repaint();
-					stones.add(new SetStone(centerX, centerY, color));
-					setted[(centerX - 15) / 40][(centerY - 15) / 40] = color;
-					checkMatch((centerX - 15) / 40, (centerY - 15) / 40, color);
-					addSound();
-					Main.frame.client.sender.sendFunct("[STONES]," + Main.frame.client.receiver.threadNum + "," +centerX + "," + centerY + "," + color);
-				}
-				else {
-					JOptionPane.showMessageDialog(null, "이 곳에 돌을 놓을 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
-				}
-				repaint();
-			}
+		if(Main.frame.start < 2) {
+			this.setEnabled(false);
+			Main.frame.grp.setEnabled(false);
 		}
 		
-		else if(Main.frame.client.receiver.threadNum % 2 == 1) {
-			if(turn)
-				this.setEnabled(false);
-			else {
-				this.setEnabled(true);
-				setX = e.getX();
-				setY = e.getY();
-				centerX = setX + (40 * (setX / 40) - (setX - 15));
-				centerY = setY + (40 * (setY / 40) - (setY - 15));
-				if(checkSetted() && checkBound()) {
-					setTurn();
-					MainFrame.gsp.repaint();
-					stones.add(new SetStone(centerX, centerY, color));
-					setted[(centerX - 15) / 40][(centerY - 15) / 40] = color;
-					checkMatch((centerX - 15) / 40, (centerY - 15) / 40, color);
-					addSound();
-					Main.frame.client.sender.sendFunct("[STONES]," + Main.frame.client.receiver.threadNum + "," +centerX + "," + centerY + "," + color);
+		else {
+			if(Main.frame.client.receiver.threadNum % 2 == 0) {
+				if(!turn) {
+					this.setEnabled(false);
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "이 곳에 돌을 놓을 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+					this.setEnabled(true);
+					setX = e.getX();
+					setY = e.getY();
+					centerX = setX + (40 * (setX / 40) - (setX - 15));
+					centerY = setY + (40 * (setY / 40) - (setY - 15));
+					if(checkSetted() && checkBound()) {
+						setTurn();
+						MainFrame.gsp.repaint();
+						stones.add(new SetStone(centerX, centerY, color));
+						setted[(centerX - 15) / 40][(centerY - 15) / 40] = color;
+						checkMatch((centerX - 15) / 40, (centerY - 15) / 40, color);
+						addSound();
+						Main.frame.client.sender.sendFunct("[STONES]," + Main.frame.client.receiver.threadNum + "," +centerX + "," + centerY + "," + color);
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "이 곳에 돌을 놓을 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+					}
+					repaint();
 				}
-				repaint();
+			}
+			
+			else if(Main.frame.client.receiver.threadNum % 2 == 1) {
+				if(turn)
+					this.setEnabled(false);
+				else {
+					this.setEnabled(true);
+					setX = e.getX();
+					setY = e.getY();
+					centerX = setX + (40 * (setX / 40) - (setX - 15));
+					centerY = setY + (40 * (setY / 40) - (setY - 15));
+					if(checkSetted() && checkBound()) {
+						setTurn();
+						MainFrame.gsp.repaint();
+						stones.add(new SetStone(centerX, centerY, color));
+						setted[(centerX - 15) / 40][(centerY - 15) / 40] = color;
+						checkMatch((centerX - 15) / 40, (centerY - 15) / 40, color);
+						addSound();
+						Main.frame.client.sender.sendFunct("[STONES]," + Main.frame.client.receiver.threadNum + "," +centerX + "," + centerY + "," + color);
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "이 곳에 돌을 놓을 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+					}
+					repaint();
+				}
 			}
 		}
 		
@@ -324,6 +351,8 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 			setCount2 = 1;
 			turn = false;
 			MainFrame.gsp.turn = false;
+			Main.frame.client.sender.sendFunct("[TURN],"+ Main.frame.client.receiver.threadNum + "," + turn);
+			Main.frame.client.sender.sendFunct("[ENABLE]," + Main.frame.client.receiver.threadNum + "," + turn);
 			MainFrame.gsp.repaint();
 		}
 		
@@ -331,6 +360,8 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 			setCount1 = 1;
 			turn = true;
 			MainFrame.gsp.turn = true;
+			Main.frame.client.sender.sendFunct("[TURN],"+ Main.frame.client.receiver.threadNum + "," + turn);
+			Main.frame.client.sender.sendFunct("[ENABLE]," + Main.frame.client.receiver.threadNum + "," + turn);
 			MainFrame.gsp.repaint();
 		}
 		else if(setCount1 == 1) {
@@ -368,7 +399,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("UNDO")) {
-			if(stones.size() == 1) {
+			if(stones.size() == 2) {
 				JOptionPane.showMessageDialog(null, "더이상 되돌릴 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
@@ -376,7 +407,6 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 				Main.frame.client.sender.sendFunct("[UNDO]," + Main.frame.client.receiver.threadNum);
 			}
 		}
-		
 	}
 
 	

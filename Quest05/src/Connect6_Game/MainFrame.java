@@ -17,7 +17,11 @@ public class MainFrame extends JFrame implements ActionListener{
 	public static HowToPlay htp;
 	public static GameLogin gl;
 	public static ChattingPanel cp;
+	public static GameReadyPanel grp;
+	public static GameStartPanel gstartp;
 	GameClient client;
+	
+	int start = 0;
 	
 	MainFrame() {
 		this.setSize(1300, 850);
@@ -47,12 +51,16 @@ public class MainFrame extends JFrame implements ActionListener{
 	public void enterGame() {
 		getContentPane().removeAll();
 		gp = new GamePanel();
+		grp = new GameReadyPanel();
 		gsp = new GameSubPanel();
 		cp = new ChattingPanel();
+		
 		gp.setLocation(30, 30);
+		grp.setLocation(140, 290);
 		gsp.setLocation(890, 30);
 		cp.setLocation(890, 340);
 		
+		this.add(grp);
 		this.add(gp);
 		this.add(gsp);
 		this.add(cp);
@@ -94,6 +102,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		gp.setLocation(30, 30);
 		gsp.setLocation(890, 30);
 		cp.setLocation(890, 340);
+		gsp.turn = true;
 		this.add(gp);
 		this.add(gsp);
 		this.add(cp);
@@ -148,6 +157,8 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		else if(e.getActionCommand().equals("Let's Play")) {
 			enterGame();
+			start++;
+			client.sender.sendFunct("[WAIT]," + client.receiver.threadNum +",ready");
 		}
 		
 		else if(e.getActionCommand().equals("Go Back")) {

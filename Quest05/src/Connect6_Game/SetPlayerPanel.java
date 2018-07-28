@@ -15,8 +15,8 @@ public class SetPlayerPanel extends JPanel{
 		setSize(1300, 850);
 		setBackground(new Color(51, 51, 58));
 		setLayout(null);
-		player1 = new Player("/Users/jeong-gyeoun/Downloads/boy.png");
-		player2 = new Player("/Users/jeong-gyeoun/Downloads/girl.png");
+		player1 = new Player("img/boy.png");
+		player2 = new Player("img/girl.png");
 		start = new JButton("Let's Play");
 		cancel = new JButton("Go Back");
 		
